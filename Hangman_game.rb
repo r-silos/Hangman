@@ -6,4 +6,8 @@ Class Human
 end
 
 Class Computer
+
+    def load_in_secret_word
+        
+
 end
