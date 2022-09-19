@@ -15,7 +15,7 @@ class Game
     def alphabet_loop
         alphabet_array = []
         for i in 97 .. 122
-            alphabet_array.append(i.chr)
+          alphabet_array.append(i.chr)
         end
         alphabet_array
     end
@@ -29,21 +29,43 @@ class Game
     end
     #function to delete guessed letter from @available_letters
     def letter_deletor(letter)
+        @available_letters.delete(letter)
+    end
+
 end
 
 class Human
 
     #function to get input from user
     def input_getter
-        print "\nHello HUMAN, type in your guess here: "
-        guess = gets.chomp
+        print "\nHello HUMAN, type in your letter guess here: "
+        guess = gets.chomp.downcase
     end
+
+    #function to ensure user's input is valid and in array of options
+    def input_verifier(input,alpha_array)
+        until alpha_array.include?(input)
+            puts "\nHey Bucko, that input is not valid, please select a letter you have not chosen"
+            print "Please input a valid letter here: "
+            input = gets.chomp
+        end
+        input
+    end
+
+    #compund function that gets input and verifies it
+    def all_input(alpha_array)
+        letter = input_getter()
+        letter = input_verifier(letter,alpha_array)
+        puts letter
+        letter
+    end
+
 
 
 end
 
 class Computer
-    attr_accessor :secret_word
+    attr_reader :secret_word
 
     #Loads in the dictionary file with each word as part of an array
     def initialize
@@ -60,9 +82,21 @@ class Computer
         secret_word
     end 
 end
-
+=begin
 al = Computer.new()
 puts al.secret_word
 
 #john = Game.new()
 #print john.available_letters.flatten
+=end
+juego = Game.new()
+john = Human.new()
+al = Game.new()
+
+5.times do
+    let = john.all_input(juego.available_letters)
+    al.letter_deletor(let)
+end
+
+print al.available_letters
+puts
