@@ -1,16 +1,19 @@
 class Game
-    attr_reader :available_letters
+    attr_reader :available_letters, :guessboard
 
     def initialize
         @lives = 7
         @guessboard = []
         @available_letters = alphabet_loop()
+        @secret_word = ''
     end
+    
     #function to print intro text
     def game_introduction
         puts "Welcome to Hangman! You will have seven lives to correctly guess the word chosen by the computer. If you fail, you will have blood on your hands (stick figure blood)"
-        puts "You will be prompted each turn to guess a word. There will be a display showing  "
+        puts "You will be prompted each turn to guess a letter. There will be a display showing  "
     end
+    
     #loop to create an array containing all letters in apphabet(lowercase)
     def alphabet_loop
         alphabet_array = []
@@ -19,19 +22,48 @@ class Game
         end
         alphabet_array
     end
+    
     #fucntion to reduece lives by 1 at end of each turn
     def lives_reducer
         @lives -= 1
     end
+    
     #function to append guessed letter to guessboard 
     def letter_appender(letter)
         @guessboard.append(letter)
     end
+    
     #function to delete guessed letter from @available_letters
     def letter_deletor(letter)
         @available_letters.delete(letter)
     end
 
+    #fucntion to set secret word
+    def secret_word_setter(secret_code)
+        @secret_word = secret_code.split(//)
+    end
+
+    #function to create array to hold correct number of letter of secret word
+    def correct_guess_array_creator(sc)
+        @correct_guess_array = Array.new(sc.length - 1)
+    end
+
+    #compound function to hold functions related to secrert word
+    def secret_code_setter_and_array_creator(code)
+        secret_word_setter(code)
+        correct_guess_array_creator(code)
+    end
+
+
+    def letter_checker(letter)
+    
+    end
+=begin
+    def display
+        puts "Guessboard:               Availabe_letters:"
+        i = 0
+        while i < 
+=end
 end
 
 class Human
@@ -56,7 +88,6 @@ class Human
     def all_input(alpha_array)
         letter = input_getter()
         letter = input_verifier(letter,alpha_array)
-        puts letter
         letter
     end
 
@@ -82,21 +113,20 @@ class Computer
         secret_word
     end 
 end
-=begin
-al = Computer.new()
-puts al.secret_word
 
-#john = Game.new()
-#print john.available_letters.flatten
-=end
+
 juego = Game.new()
 john = Human.new()
-al = Game.new()
+al = Computer.new()
+
+juego.secret_code_setter_and_array_creator(al.secret_word)
 
 5.times do
     let = john.all_input(juego.available_letters)
-    al.letter_deletor(let)
+    juego.letter_deletor(let)
+    juego.letter_appender(let)
 end
 
-print al.available_letters
+print juego.available_letters
 puts
+print juego.guessboard
