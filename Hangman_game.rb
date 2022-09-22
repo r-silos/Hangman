@@ -1,11 +1,13 @@
 class Game
-    attr_reader :available_letters, :guessboard
+    attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word
 
     def initialize
         @lives = 7
         @guessboard = []
         @available_letters = alphabet_loop()
         @secret_word = ''
+        @game_over = false
+        @game_won = false
     end
     
     #function to print intro text
@@ -23,9 +25,24 @@ class Game
         alphabet_array
     end
     
-    #fucntion to reduece lives by 1 at end of each turn
-    def lives_reducer
+    #fucntion to reduece lives by 1 at end of each turn and check if out of lives
+    def lives_reducer_and_checker
         @lives -= 1
+        if @lives == 0
+            @game_over = true
+        end
+    end
+
+    #function to check if game was won
+    def game_won?
+        puts "The guessboard is #{@guessboard}"
+        puts "the secret word is #{@secret_word}"
+        
+        if @guessboard == @secret_word
+            @game_over = true
+            @game_won = true
+            puts "game has been won"
+        end
     end
     
     #function to append guessed letter to guessboard 
@@ -38,14 +55,20 @@ class Game
         @available_letters.delete(letter)
     end
 
+    #compound function to append letter to guessboard and deleter letter from available lettor
+    def letter_deletor_and_appendor(letter)
+        letter_appender(letter)
+        letter_deletor(letter)
+    end
+
     #fucntion to set secret word
     def secret_word_setter(secret_code)
-        @secret_word = secret_code.split(//)
+        @secret_word = secret_code.chomp.split(//)
     end
 
     #function to create array to hold correct number of letter of secret word
     def correct_guess_array_creator(sc)
-        @correct_guess_array = Array.new(sc.length - 1)
+        @correct_guess_array = Array.new(sc.length - 1, '_')
     end
 
     #compound function to hold functions related to secrert word
@@ -54,9 +77,30 @@ class Game
         correct_guess_array_creator(code)
     end
 
-
+    #function to find whether letter is in secret word and return an array with indexes of where letter was found
     def letter_checker(letter)
-    
+        correct_indexes_array = []
+        @secret_word.each_with_index do |ele, index|
+            if ele == letter
+                correct_indexes_array.append(index)
+            end
+        end
+        correct_indexes_array
+    end
+
+    #function to append the correct letter to index using correct_index_array
+    def correct_letter_appendor(letter, cor_index_array)
+        for i in cor_index_array
+            @correct_guess_array[i] = letter
+        end
+    end
+
+    #compound function to check if correct letter and then append correct letter to array
+    def letter_checker_and_appendor(letter)
+        cga = letter_checker(letter)
+        if cga.any?
+            correct_letter_appendor(letter, cga)
+        end
     end
 =begin
     def display
@@ -120,13 +164,18 @@ john = Human.new()
 al = Computer.new()
 
 juego.secret_code_setter_and_array_creator(al.secret_word)
+puts al.secret_word
 
-5.times do
+until juego.game_over == true
     let = john.all_input(juego.available_letters)
-    juego.letter_deletor(let)
-    juego.letter_appender(let)
+    juego.letter_deletor_and_appendor(let)
+    juego.letter_checker_and_appendor(let)
+    juego.game_won?
+    juego.lives_reducer_and_checker
 end
 
 print juego.available_letters
 puts
 print juego.guessboard
+puts 
+print juego.correct_guess_array
