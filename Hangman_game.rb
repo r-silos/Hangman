@@ -1,8 +1,9 @@
 class Game
-    attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word
+    attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word, :lives
 
     def initialize
-        @lives = 7
+        @lives = 9
+        #@correct_guessboard = []
         @guessboard = []
         @available_letters = alphabet_loop()
         @secret_word = ''
@@ -26,8 +27,7 @@ class Game
     end
     
     #fucntion to reduece lives by 1 at end of each turn and check if out of lives
-    def lives_reducer_and_checker
-        @lives -= 1
+    def lives_checker
         if @lives == 0
             @game_over = true
         end
@@ -35,10 +35,10 @@ class Game
 
     #function to check if game was won
     def game_won?
-        puts "The guessboard is #{@guessboard}"
+        puts "The correct_guessboard is #{@correct_guess_array}"
         puts "the secret word is #{@secret_word}"
         
-        if @guessboard == @secret_word
+        if @correct_guess_array == @secret_word
             @game_over = true
             @game_won = true
             puts "game has been won"
@@ -96,10 +96,12 @@ class Game
     end
 
     #compound function to check if correct letter and then append correct letter to array
-    def letter_checker_and_appendor(letter)
+    def letter_checker_and_appendor_and_life_reducer(letter)
         cga = letter_checker(letter)
         if cga.any?
             correct_letter_appendor(letter, cga)
+        else 
+            @lives -= 1
         end
     end
 =begin
@@ -169,9 +171,9 @@ puts al.secret_word
 until juego.game_over == true
     let = john.all_input(juego.available_letters)
     juego.letter_deletor_and_appendor(let)
-    juego.letter_checker_and_appendor(let)
+    juego.letter_checker_and_appendor_and_life_reducer(let)
     juego.game_won?
-    juego.lives_reducer_and_checker
+    juego.lives_checker
 end
 
 print juego.available_letters
@@ -179,3 +181,4 @@ puts
 print juego.guessboard
 puts 
 print juego.correct_guess_array
+puts
