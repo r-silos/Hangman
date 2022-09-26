@@ -1,14 +1,17 @@
+require 'yaml'
+
 class Game
-    attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word, :lives
+    attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word, :lives, :game_won
 
     def initialize
-        @lives = 9
+        @lives = 6
         #@correct_guessboard = []
         @guessboard = []
         @available_letters = alphabet_loop()
         @secret_word = ''
         @game_over = false
         @game_won = false
+        @incorrect_guess_array = []
     end
     
     #function to print intro text
@@ -35,13 +38,12 @@ class Game
 
     #function to check if game was won
     def game_won?
-        puts "The correct_guessboard is #{@correct_guess_array}"
-        puts "the secret word is #{@secret_word}"
+        #puts "The correct_guessboard is #{@correct_guess_array}"
+        #puts "the secret word is #{@secret_word}"
         
         if @correct_guess_array == @secret_word
             @game_over = true
             @game_won = true
-            puts "game has been won"
         end
     end
     
@@ -102,14 +104,24 @@ class Game
             correct_letter_appendor(letter, cga)
         else 
             @lives -= 1
+            @incorrect_guess_array.append(letter)
         end
     end
 =begin
-    def display
-        puts "Guessboard:               Availabe_letters:"
-        i = 0
-        while i < 
+    Display function needs to show the lives remaining, correct letters chosen and pos in
+    word, and which incorrect letters have already been chosen
 =end
+
+    #display function updates player on game essential info
+    def display
+        puts "The number of lives left is #{@lives}"
+        puts "The incorrct letters chosen are #{@incorrect_guess_array}"
+        puts "The current gameboard is #{@correct_guess_array}"
+    end
+
+    # function used to save essential info into yaml file
+    def save_game
+        
 end
 
 class Human
@@ -172,13 +184,13 @@ until juego.game_over == true
     let = john.all_input(juego.available_letters)
     juego.letter_deletor_and_appendor(let)
     juego.letter_checker_and_appendor_and_life_reducer(let)
+    juego.display
     juego.game_won?
     juego.lives_checker
 end
 
-print juego.available_letters
-puts
-print juego.guessboard
-puts 
-print juego.correct_guess_array
-puts
+if juego.game_won == true
+    puts "\nHoly shit, you won the game!"
+else
+    puts "\nTF, You lost! Embarassing!"
+end
