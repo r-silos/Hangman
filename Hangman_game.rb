@@ -119,9 +119,18 @@ class Game
         puts "The current gameboard is #{@correct_guess_array}"
     end
 
+    # fucntion to create the hash with game essential info that will be saved and loaded
+    def essential_hash_info
+        info = {
+            :secret => @secret_word,
+            :lifes => @lives
+
+        }
+    
     # function used to save essential info into yaml file
     def save_game
-        
+        output = File.new('surve_game.yaml', 'w')
+    end
 end
 
 class Human
@@ -194,3 +203,11 @@ if juego.game_won == true
 else
     puts "\nTF, You lost! Embarassing!"
 end
+
+=begin
+OBJ for next time
+-Work on essential_hash_info func that is used to create a hash
+that will be passed onto the YAML file for saving and loading
+-Work on Yaml Load File
+-Work on Yaml Save file
+-Work to incorprate saving and loading game into game flow
