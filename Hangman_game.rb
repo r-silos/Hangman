@@ -123,13 +123,17 @@ class Game
     def essential_hash_info
         info = {
             :secret => @secret_word,
-            :lifes => @lives
-
+            :lifes => @lives,
+            :correct_guess_array => @correct_guess_array,
+            :guessboard => @guessboard
         }
-    
+        return info
+    end
     # function used to save essential info into yaml file
     def save_game
-        output = File.new('surve_game.yaml', 'w')
+        save_data = essential_hash_info()
+        output = File.open('surve_game.yaml', 'w')
+        YAML.dump(save_data,output)
     end
 end
 
@@ -188,6 +192,15 @@ al = Computer.new()
 
 juego.secret_code_setter_and_array_creator(al.secret_word)
 puts al.secret_word
+let = john.all_input(juego.available_letters)
+juego.letter_deletor_and_appendor(let)
+juego.letter_checker_and_appendor_and_life_reducer(let)
+juego.display
+juego.game_won?
+juego.lives_checker
+juego.save_game
+
+=begin
 
 until juego.game_over == true
     let = john.all_input(juego.available_letters)
@@ -203,11 +216,11 @@ if juego.game_won == true
 else
     puts "\nTF, You lost! Embarassing!"
 end
-
-=begin
 OBJ for next time
 -Work on essential_hash_info func that is used to create a hash
 that will be passed onto the YAML file for saving and loading
 -Work on Yaml Load File
 -Work on Yaml Save file
 -Work to incorprate saving and loading game into game flow
+
+=end
