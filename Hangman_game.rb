@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 
 class Game
     attr_reader :available_letters, :guessboard, :correct_guess_array, :game_over, :secret_word, :lives, :game_won
@@ -132,8 +132,15 @@ class Game
     # function used to save essential info into yaml file
     def save_game
         save_data = essential_hash_info()
-        output = File.open('surve_game.yaml', 'w')
-        YAML.dump(save_data,output)
+        File.write('save_game.json',JSON.dump(save_data))
+    end
+
+    def load_game
+        filo = File.read('save_game.json')
+        data_obj = JSON.parse(filo)
+        puts
+        print data_obj
+        puts "this should be end of file"
     end
 end
 
@@ -199,6 +206,7 @@ juego.display
 juego.game_won?
 juego.lives_checker
 juego.save_game
+juego.load_game
 
 =begin
 
