@@ -125,7 +125,7 @@ class Game
             :secret => @secret_word,
             :lifes => @lives,
             :correct_guess_array => @correct_guess_array,
-            :guessboard => @guessboard
+            :available_letters => @available_letters
         }
         return info
     end
@@ -135,12 +135,11 @@ class Game
         File.write('save_game.json',JSON.dump(save_data))
     end
 
+    #function to load in data from save file
     def load_game
         filo = File.read('save_game.json')
         data_obj = JSON.parse(filo)
-        puts
-        print data_obj
-        puts "this should be end of file"
+       
     end
 end
 
@@ -224,11 +223,4 @@ if juego.game_won == true
 else
     puts "\nTF, You lost! Embarassing!"
 end
-OBJ for next time
--Work on essential_hash_info func that is used to create a hash
-that will be passed onto the YAML file for saving and loading
--Work on Yaml Load File
--Work on Yaml Save file
--Work to incorprate saving and loading game into game flow
-
 =end
